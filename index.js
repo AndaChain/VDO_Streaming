@@ -2,11 +2,13 @@ const express = require("express"); // เฟม work ของ nodejs
 const app = express();
 const fs = require("fs");
 
-app.get("/", function (req, res) {
+
+app.get("/", function (req, res ) {
+  filename = req.query.filename;
   res.sendFile(__dirname + "/index.html");
-  const range2 = req.headers;
+  //const range2 = req.headers;
   //console.log(range2)
-  const videoStream2 = fs.createReadStream("test_long.mkv");
+  //const videoStream2 = fs.createReadStream(filename);
   //console.log(videoStream2)
   // https://stackoverflow.com/questions/4696283/what-are-res-and-req-parameters-in-express-functions
   // **req** is an object containing information about the HTTP request that raised the event.
@@ -28,7 +30,7 @@ app.get("/video", function (req, res) {
   }
 
   // get video stats (about 61MB)
-  const videoPath = "test_long.mkv";
+  const videoPath = filename;
   const videoSize = fs.statSync(videoPath).size;
 
   // Parse Range
