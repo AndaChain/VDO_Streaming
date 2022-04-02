@@ -5,12 +5,11 @@ const fs = require("fs");
 //Use http://localhost:8000/index/filename to acess the file.
 
 app.get("/",function(req,res){
-  res.sendFile(__dirname + "/index.html");
-  res.redirect("/index/test.mp3")
+  res.redirect("/video/test.mp3")
 })
 
-app.get("/index/:filename", function (req, res ) {
-  res.sendFile(__dirname + "/index.html");
+app.get("/video/:filename", function (req, res ) {
+  res.sendFile(__dirname + "/video.html");
   filename = req.params.filename;
   //const range2 = req.headers;
   //console.log(range2)
@@ -36,7 +35,7 @@ app.get("/video", function (req, res) {
   }
 
   // get video stats (about 61MB)
-  const videoPath = filename;
+  const videoPath = "video/"+filename;
   const videoSize = fs.statSync(videoPath).size;
 
   // Parse Range
