@@ -4,14 +4,10 @@ const fs = require("fs");
 
 //Use http://localhost:8000/index/filename to acess the file.
 
-app.get("/",function(req,res){
-  res.sendFile(__dirname + "/index.html");
-  res.redirect("/index/test.mp3")
-})
-
 app.get("/index/:filename", function (req, res ) {
-  res.sendFile(__dirname + "/index.html");
   filename = req.params.filename;
+  console.log(filename)
+  res.sendFile(__dirname + "/index.html");
   //const range2 = req.headers;
   //console.log(range2)
   //const videoStream2 = fs.createReadStream(filename);
