@@ -11,23 +11,17 @@ app.get("/",function(req,res){
 app.get("/video/:filename", function (req, res ) {
   res.sendFile(__dirname + "/video.html");
   filename = req.params.filename;
-  //const range2 = req.headers;
-  //console.log(range2)
-  //const videoStream2 = fs.createReadStream(filename);
-  //console.log(videoStream2)
-  // https://stackoverflow.com/questions/4696283/what-are-res-and-req-parameters-in-express-functions
-  // **req** is an object containing information about the HTTP request that raised the event.
-  // In response to req, you use **res** to send back the desired HTTP response.
-  
-  //console.log(req) // Incoming Message
-  
-  //console.log("**********************************************************************************************************************************************************************")
-  
-  //console.log(res) // Server Response
 });
 
 app.get("/video", function (req, res) {
-  // Ensure there is a range given for the video
+  data_streaming(req , res , filename);
+});
+
+app.listen(8000, function () {
+  console.log("Listening on port 8000!");
+});
+
+function data_streaming(req , res , filename){
   const range = req.headers.range; // bytes=26961489-
   
   if (!range) {
@@ -60,8 +54,4 @@ app.get("/video", function (req, res) {
 
   // Stream the video chunk to the client
   videoStream.pipe(res);
-});
-
-app.listen(8000, function () {
-  console.log("Listening on port 8000!");
-});
+}
