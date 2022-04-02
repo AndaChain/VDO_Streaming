@@ -2,9 +2,11 @@ const express = require("express"); // เฟม work ของ nodejs
 const app = express();
 const fs = require("fs");
 
+//Use http://localhost:8000/index/filename to acess the file.
 
-app.get("/", function (req, res ) {
-  filename = req.query.filename;
+app.get("/index/:filename", function (req, res ) {
+  filename = req.params.filename;
+  console.log(filename)
   res.sendFile(__dirname + "/index.html");
   //const range2 = req.headers;
   //console.log(range2)
