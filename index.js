@@ -21,8 +21,8 @@ app.get("/video", function (req, res) {
   const range = req.headers.range
   var dir = __dirname + "/video/" + filename
   //new Streaming_index(dir);
-  //new Streaming_read_index(req, res, range, dir);
-  new Streaming(req, res, range, dir);
+  new Streaming_read_index(req, res, range, dir);
+  //new Streaming(req, res, range, dir);
 });
 
 app.listen(8000, function () {

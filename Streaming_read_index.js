@@ -15,7 +15,7 @@ class Streaming_read_index{
 					var index = Math.floor(_range/10 ** 6) // CHUNK_SIZE = 10 ** 6
 					var start = json_read.start[index]
 					var end = json_read.end[index]
-					const videoStream = json_read.videoStream[index]
+					//const videoStream = json_read.videoStream[index]
 					
 					const videoSize = fs.statSync(dir_file).size;
 					

@@ -24,7 +24,7 @@ class Streaming{
 				"Content-Length": contentLength,
 				};
 		  
-				//res.writeHead(206, headers);
+				res.writeHead(206, headers);
 		  
 				const videoStream = fs.createReadStream(videoPath, { start, end });
 				
