@@ -17,6 +17,7 @@
     "boxen": "^5.1.2",
     "brace-expansion": "^1.1.11",
     "braces": "^3.0.2",
+    "browserify-fs": "^1.0.0",
     "bytes": "^3.1.2",
     "cacheable-request": "^6.1.0",
     "camelcase": "^6.3.0",
@@ -169,6 +170,5 @@
   "bugs": {
     "url": "https://github.com/AndaChain/VDO_Streaming/issues"
   },
-  "homepage": "https://github.com/AndaChain/VDO_Streaming#readme",
-  "devDependencies": {}
+  "homepage": "https://github.com/AndaChain/VDO_Streaming#readme"
 }
