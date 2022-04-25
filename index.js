@@ -19,10 +19,15 @@ app.get("/index/:filename", function (req, res ) {
 
 app.get("/video", function (req, res) {
   const range = req.headers.range
-  var dir = __dirname + "/video/" + filename
+  var dir = __dirname + "/video/" + filename;
   //new Streaming_index(dir);
   new Streaming_read_index(req, res, range, dir);
   //new Streaming(req, res, range, dir);
+});
+
+app.get("/CreateIndex",function(req,res){
+  new Streaming_index(__dirname+"/video/mongodb_group5.mp4");
+  res.redirect("/");
 });
 
 app.listen(8000, function () {
