@@ -4,6 +4,7 @@ const Streaming_index = require("./Streaming_index.js");
 const Streaming = require("./Streaming.js");
 const app = express();
 const fs = require("fs");
+const Create_Segment = require("./Segment_Creater.js"); 
 
 //Use http://localhost:8000/ to acess the file.
 
@@ -30,6 +31,11 @@ app.get("/CreateIndex",function(req,res){
   res.redirect("/");
 });
 
+app.get("/CreateSegment",function(req,res){
+  new Create_Segment(__dirname+"\\video\\mongodb_group5.mp4");
+})
+
 app.listen(8000, function () {
   console.log("Listening on port 8000!");
 });
+
