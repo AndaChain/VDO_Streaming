@@ -5,6 +5,7 @@ const Streaming = require("./Streaming.js");
 const app = express();
 const fs = require("fs");
 const Create_Segment = require("./Segment_Creater.js"); 
+const mpdgen = require("./mpdgen.js");
 
 //Use http://localhost:8000/ to acess the file.
 
@@ -38,6 +39,10 @@ app.get("/CreateSegment",function(req,res){
   segment.resolution_webm('160x90')
   
   res.redirect("/");
+})
+
+app.get("/CreateMPD" , function(req,res){
+  new mpdgen("Polkka_rock");
 })
 
 app.listen(8000, function () {
