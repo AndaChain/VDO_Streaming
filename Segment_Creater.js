@@ -1,12 +1,13 @@
 var ffmpeg = require('fluent-ffmpeg');
 
 class Segment_Creater{
-    constructor(dir_file){
+    constructor(dir_file , fileoutname){
 		this.pathToSourceFile = dir_file
+    this.fileoutname = fileoutname
 		var _command = ffmpeg(this.pathToSourceFile);
 		_command.videoCodec('libvpx')
         .noVideo()
-        .save('video/audio.webm');
+        .save('video/'+ fileoutname +'_audio.webm');
     }
     
     resolution(size){
@@ -15,7 +16,7 @@ class Segment_Creater{
 		  '-an',
 		  '-acodec',
 		  'copy',
-		]).size(size).save('video/'+size+'_output.mp4');
+		]).size(size).save('video/'+ this.fileoutname +'_'+size+'_output.mp4');
 	}
 	
     resolution_webm(size){
@@ -33,7 +34,7 @@ class Segment_Creater{
         }) 
         .size(size)
         .noAudio()
-        .save('video/'+size+'_output.webm');
+        .save('video/'+ this.fileoutname +'_'+size+'_output.webm');
 	}
     
 }

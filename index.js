@@ -33,7 +33,7 @@ app.get("/CreateIndex",function(req,res){
 });
 
 app.get("/CreateSegment",function(req,res){
-  var segment = new Create_Segment(__dirname+"\\video\\Polkka_rock.mp4");
+  var segment = new Create_Segment(__dirname+"\\video\\Polkka_rock.mp4" , "Polkka_rock");
   segment.resolution_webm('640x360')
   segment.resolution_webm('320x180')
   segment.resolution_webm('160x90')
