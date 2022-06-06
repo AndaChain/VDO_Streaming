@@ -62,7 +62,16 @@ const ffmpeg = createFFmpeg({ log: true });
 */
 
 
-
+    /*
+    resolution(size){
+		var _command = ffmpeg(this.pathToSourceFile);
+		_command.outputOptions([
+		  '-an',
+		  '-acodec',
+		  'copy',
+		]).size(size).save('video/'+ this.fileoutname +'_'+size+'_output.mp4');
+	}
+	*/
 
 
 /*
@@ -102,6 +111,7 @@ command.videoCodec('libvpx') //libvpx-vp9 could be used too
         .noVideo()
         .save('video/audio.webm');
 */
+/*
 const fluent = require('fluent-ffmpeg');
 
 const executeFfmpeg = args => {
@@ -117,6 +127,76 @@ var path = __dirname + '\\video'
 // -i video.mkv -vn -acodec copy audio_only.mkv
 var com = "-f webm_dash_manifest -i "+path+"\\160x90_output.webm -f webm_dash_manifest -i "+path+"\\320x180_output.webm -f webm_dash_manifest -i "+path+"\\640x360_output.webm -f webm_dash_manifest -i "+path+"\\audio.webm "+"-c copy -map 0 -map 1 -map 2 -map 3"+" -f webm_dash_manifest -adaptation_sets"+" 'id=0,streams=0,1,2,id=1,streams=3' "+path+"\\manifest.mpd"
 // var comm = '-f webm_dash_manifest -i 160x90_output.webm -f webm_dash_manifest -i 320x180_output.webm -f webm_dash_manifest -i 640x360_output.webm -f webm_dash_manifest -i audio.webm -c copy -map 0 -map 1 -map 2 -map 3 -f webm_dash_manifest -adaptation_sets "id=0,streams=0,1,2 id=1,streams=3" manifest.mpd'
-console.log(com)
 executeFfmpeg(com)
     .run();
+*/
+/*
+var mpd_generator = require("mpd-generator");
+
+var data = {
+  path: __dirname+"/video",
+  inputFile: "video",
+  format: ".mkv",
+};
+
+mpd_generator.main(data);
+*/
+
+		/*
+        exec('mse_json_manifest '+path+filename+'_160x90_output.webm > '+path+filename+'_160x90_output.webm.json', (error, stdout, stderr) => {
+            if(error){
+              console.error(`exec error: ${error}`);
+              return;
+            }
+            console.log("160x90 Done")
+          });
+
+        exec('mse_json_manifest '+path+filename+'_320x180_output.webm > '+path+filename+'_320x180_output.webm.json', (error, stdout, stderr) => {
+            if(error){
+              console.error(`exec error: ${error}`);
+              return;
+            }
+            console.log("320x180 Done")
+          });
+          
+        exec('mse_json_manifest '+path+filename+'_640x360_output.webm > '+path+filename+'_640x360_output.webm.json', (error, stdout, stderr) => {
+            if(error){
+              console.error(`exec error: ${error}`);
+              return;
+            }
+            console.log("640x360 Done")
+          });
+		*/
+const { exec } = require('node:child_process');
+console.log("running")
+
+class manifestgen{
+    constructor(filename){
+		var path = __dirname + '\\video\\'
+        exec('mse_json_manifest '+path+'160x90_output.webm > '+path+'160x90_output.webm.json', (error, stdout, stderr) => {
+            if(error){
+              console.error(`exec error: ${error}`);
+              return;
+            }
+            console.log("160x90 Done")
+          });
+
+        exec('mse_json_manifest '+path+'320x180_output.webm > '+path+'320x180_output.webm.json', (error, stdout, stderr) => {
+            if(error){
+              console.error(`exec error: ${error}`);
+              return;
+            }
+            console.log("320x180 Done")
+          });
+          
+        exec('mse_json_manifest '+path+'640x360_output.webm > '+path+'640x360_output.webm.json', (error, stdout, stderr) => {
+            if(error){
+              console.error(`exec error: ${error}`);
+              return;
+            }
+            console.log("640x360 Done")
+          });
+    
+    }
+}
+module.exports = manifestgen;

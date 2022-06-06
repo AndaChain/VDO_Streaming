@@ -6,8 +6,8 @@ class Streaming_index{
 			const videoPath = dir_file;
 			const videoSize = fs.statSync(videoPath).size;
 			const json_data = {"start":[],"end":[],"videoStream":[]};
-			for(var range_=0; range_<videoSize; range_ = range_ + 10 ** 6){
-					const CHUNK_SIZE = 10 ** 6; // 1MB
+			for(var range_=0; range_<videoSize; range_ = range_ + 10**6){
+					const CHUNK_SIZE = 10**6; // 1MB
 					const start = range_;
 					const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
 					const contentLength = end - start + 1;
