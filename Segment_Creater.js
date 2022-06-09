@@ -81,3 +81,14 @@ class Segment_Creater{
 	}
 }
 module.exports = Segment_Creater;
+/*
+source = __dirname+"\\video\\"
+savevideo = __dirname+"\\video\\Polkka_rock\\"
+manifest =  __dirname+"\\video\\Polkka_rock\\"
+fileoutname = "Polkka_rock"
+var segment = new Segment_Creater(source, savevideo, manifest, fileoutname);
+segment.extract_video('640x360')
+segment.extract_video('320x180')
+segment.extract_video('160x90')
+segment.extract_audio()
+*/
