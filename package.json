@@ -4,7 +4,9 @@
   "description": "Easy Dash Streaming",
   "main": "Segment_Creater.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run build-player && node index.js",
+    "build-player": "browserify streaming/index.js -o public/streaming-bundle.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   },
   "homepage": "https://github.com/AndaChain/easy_dash#readme",
   "dependencies": {
+    "browserify": "^17.0.0",
     "dotenv": "^16.0.1",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
