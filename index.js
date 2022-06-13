@@ -31,6 +31,7 @@ if (process.env["NODE_ENV"] === "production") {
 	});
 }
 ;
+app.use(express.static(path.join(__dirname, "public")));
 
 const resolve_file_path = (video_id, filename) => path.join(__dirname, "video", video_id, filename);
 const resolve_content_type = (filename) => filename === "audio.webm" ? "audio/webm" : "video/webm";
