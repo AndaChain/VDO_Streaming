@@ -14,6 +14,7 @@ app.set("view engine", "ejs");
 app.use((req, res, next) => {
 	console.log("Request: ", req.url);
 	console.log("Received request w/ headers:", req.headers);
+	console.log("***************************************************** I'm HERE *****************************************************")
 	next();
 });
 
