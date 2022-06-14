@@ -41,7 +41,7 @@ class ManifestParser {
 		let { children } = representation;
 		for (let i = 0; children.length; i++) {
 			if (children[i].tagName == "BaseURL") {
-				return children[i].textContent;
+				return children[i].textContent.split("\\\\")[1];
 			}
 		}
 	}

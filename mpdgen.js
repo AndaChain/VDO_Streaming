@@ -21,10 +21,10 @@ class mpdgen{
 			third_command += ','+i
 		}
 		third_command += ' id=1,streams='+sizes.length+'" '
-		third_command += manifest_path+'_manifest.mpd'
+		third_command += manifest_path+'manifest.mpd'
 		
 		
-		fs.unlink(manifest_path+'_manifest.mpd', function (err) {
+		fs.unlink(manifest_path+'manifest.mpd', function (err) {
 		  if (err) {
 			console.error("Creating new File");
 		  } else {
