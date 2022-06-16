@@ -61,7 +61,7 @@ app.get("/watch/:video_id", (req, res) => {
 		res.render("player");
 	});
 });
-
+/*
 app.get("/watch/:video_id/manifest.mpd", (req, res) => {
 	res.sendFile(resolve_file_path(req.params["video_id"], "manifest.mpd"));
 });
@@ -69,7 +69,7 @@ app.get("/watch/:video_id/manifest.mpd", (req, res) => {
 app.get("/watch/:video_id/timestamps/:filename", (req, res) => {
 	res.sendFile(resolve_file_path(req.params["video_id"], `timestamps/${req.params["filename"]}`));
 });
-
+*/
 app.get("/watch/:video_id/:filename", (req, res) => {
 	let file_name = req.params.filename;
 	let file_path = resolve_file_path(req.params["video_id"], file_name);
