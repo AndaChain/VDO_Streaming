@@ -10,14 +10,14 @@ const { sendFile } = require("./Streaming/Streamingfunc");
 var video_list = null;
 
 app.set("view engine", "ejs");
-
+/*
 app.use((req, res, next) => {
+	console.log("*******************************************")
 	console.log("Request: ", req.url);
 	console.log("Received request w/ headers:", req.headers);
-	console.log("***************************************************** I'm HERE *****************************************************")
 	next();
 });
-
+*/
 if (process.env["NODE_ENV"] === "production") {
 	app.use((req, res, next) => {
 		let ip_addr = (req.headers["x-forwarded-for"] || req.connection.remoteAddress).split(",")[0];
@@ -38,6 +38,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const resolve_file_path = (video_id, filename) => path.join(__dirname, "video", video_id, filename);
 
 app.get("/", (req, res) => {
+	console.log("1")
 	if (!video_list) {
 		let video_mnt_path = path.join(__dirname, "video");
 		let folders = fs.readdirSync(video_mnt_path).filter((name) => {
@@ -51,6 +52,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/watch/:video_id", (req, res) => {
+	console.log("2")
 	fs.stat(path.join(__dirname, "video", req.params["video_id"]), (err, stats) => {
 		if (err || !stats.isDirectory()) {
 			console.log(err);
@@ -63,17 +65,24 @@ app.get("/watch/:video_id", (req, res) => {
 });
 
 app.get("/watch/:video_id/manifest.mpd", (req, res) => {
+	console.log("3")
+	console.log(resolve_file_path(req.params["video_id"], "manifest.mpd"))
 	res.sendFile(resolve_file_path(req.params["video_id"], "manifest.mpd"));
 });
 
 app.get("/watch/:video_id/timestamps/:filename", (req, res) => {
+	console.log("4")
+	console.log(resolve_file_path(req.params["video_id"], `timestamps/${req.params["filename"]}`))
 	res.sendFile(resolve_file_path(req.params["video_id"], `timestamps/${req.params["filename"]}`));
+	console.log("*******************************************")
 });
 
 app.get("/watch/:video_id/:filename", (req, res) => {
+	console.log("5")
 	let file_name = req.params.filename;
 	let file_path = resolve_file_path(req.params["video_id"], file_name);
-
+	console.log(file_name)
+	console.log(file_path)
 	sendFile(req , res , file_path , file_name);
 });
 

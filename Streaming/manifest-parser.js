@@ -52,6 +52,7 @@ class ManifestParser {
 			.then((response) => response.text())
 			.then((manifest_str) => (new window.DOMParser()).parseFromString(manifest_str, "text/xml"))
 			.then((manifest) => {
+				console.log(manifest)
 				let first_period = manifest.getElementsByTagName("Period")[0];
 				let adaptationSets = first_period.children;
 

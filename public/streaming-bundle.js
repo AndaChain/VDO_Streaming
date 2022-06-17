@@ -13,10 +13,12 @@ playerElement.addEventListener("error", (err) => console.log(err));
 let timer = new Timer(playerElement.duration);
 
 playerElement.addEventListener("play", () => {
+	console.log("playplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplay")
 	timer.start();
 });
 
 playerElement.addEventListener("ended", () => {
+	console.log("endedendedendedendedendedendedendedendedendedendedendedendedendedendedendedendedendedended")
 	timer.end();
 	timer.setVideoDuration(playerElement.duration);
 	console.log("Lag Ratio: " + timer.lagRatio);
@@ -77,6 +79,7 @@ class ManifestParser {
 			.then((response) => response.text())
 			.then((manifest_str) => (new window.DOMParser()).parseFromString(manifest_str, "text/xml"))
 			.then((manifest) => {
+				console.log(manifest)
 				let first_period = manifest.getElementsByTagName("Period")[0];
 				let adaptationSets = first_period.children;
 
@@ -167,16 +170,19 @@ class Streaming {
 	}
 
 	get objectUrl() {
+		console.log("***************************************************** I'm HERE 1 *****************************************************")
 		return URL.createObjectURL(this.mse);
 	}
 
 	appendBufFromQueue(srcBuffer, queue) {
+		console.log("***************************************************** I'm HERE 2 *****************************************************")
 		queue.pipingToSourceBuffer = true;
 
 		return !queue.empty() && (srcBuffer.appendBuffer(queue.popFirst()) || true);
 	}
 
 	readData(reader, bufferQueue, sourceBuffer, callback = () => {}) {
+		console.log("***************************************************** I'm HERE 3 *****************************************************")
 		reader.read()
 		.then((buffer) => {
 			if (buffer.value) {
@@ -197,6 +203,7 @@ class Streaming {
 	}
 
 	init() {
+		console.log("***************************************************** I'm HERE 4 *****************************************************")
 		if (this.initialized) return;
 		this.initialized = true;
 
@@ -204,7 +211,6 @@ class Streaming {
 		.then((adaptSetsObj) => {
 			this.videoSets = adaptSetsObj["video/webm"];
 			this.audioSets = adaptSetsObj["audio/webm"];
-			console.log(this.videoSets);
 
 			this.videoQualityIndex = this.videoSets.representations.length - 1;
 
@@ -221,11 +227,13 @@ class Streaming {
 				this.attemptEndMse();
 			});
 
+			console.log(this.video_id+"===================");
 			this.fetchData();
 		});
 	}
 
 	attemptEndMse() {
+		console.log("***************************************************** I'm HERE 5 *****************************************************")
 		if (this.videoDownFin && this.audioDownFin && !this.videoQueue.pipingToSourceBuffer && !this.audioQueue.pipingToSourceBuffer) {
 			console.log("Ending MediaSource stream");
 			this.mse.endOfStream();
@@ -233,11 +241,13 @@ class Streaming {
 	}
 
 	fetchData() {
+		console.log("***************************************************** I'm HERE 6 *****************************************************")
 		this.fetchVideoAdaptive();
 		this.fetchAudio();
 	}
 
 	fetchVideoAdaptive() {
+		console.log("***************************************************** I'm HERE 7 *****************************************************")
 		this.fetchVideoInit()
 		.then(() => {
 			this.fetchVideoNextTimeSlice();
@@ -249,6 +259,7 @@ class Streaming {
 	}
 
 	fetchVideoNextTimeSlice() {
+		console.log("***************************************************** I'm HERE 8 *****************************************************")
 		let videoRepresentation = this.videoSets["representations"][this.videoQualityIndex];
 		let { timestamp_info } = videoRepresentation;
 
@@ -279,6 +290,7 @@ class Streaming {
 
 	// fetches initial video (webm headers + initial 5 seconds)
 	fetchVideoInit() {
+		console.log("***************************************************** I'm HERE 9 *****************************************************")
 		let videoRepresentation = this.videoSets["representations"][this.videoQualityIndex];
 		let { timestamp_info } = videoRepresentation;
 
@@ -305,6 +317,7 @@ class Streaming {
 	}
 
 	fetchAudio() {
+		console.log("***************************************************** I'm HERE 10 *****************************************************")
 		fetch(this.audioSets["representations"][0]["url"], {
 			headers: {
 				range: `bytes=${this.audioQueue.numBytesWrittenInSegment}-`
@@ -326,6 +339,7 @@ class Streaming {
 	}
 
 	handleReadDataFinish(finishForThrottle, nextAction, retryRequestCall) {
+		console.log("***************************************************** I'm HERE 11 *****************************************************")
 		return (err) => {
 			if (err) {
 				console.log("Retrying in video init", err);
@@ -340,6 +354,7 @@ class Streaming {
 	}
 
 	retryRequest(requestCall) {
+		console.log("***************************************************** I'm HERE 12 *****************************************************")
 		console.log(`Retrying request in ${this.retryTimer.time}`);
 		setTimeout(requestCall, this.retryTimer.time);
 		this.retryTimer.increase();
@@ -347,6 +362,7 @@ class Streaming {
 
 	// Improves quality (if possible) if time to fetch information < 50% of buffer duration decreases (if possible) if greater than 75%
 	_throttleQualityOnFeedback(fetchCall) {
+		console.log("***************************************************** I'm HERE 13 *****************************************************")
 		let bufferDuration = this._calcDuration();
 		let startTime = Date.now();
 		fetchCall(() => {
@@ -370,6 +386,7 @@ class Streaming {
 	}
 
 	_calcDuration() {
+		console.log("***************************************************** I'm HERE 14 *****************************************************")
 		let videoRepresentation = this.videoSets["representations"][this.videoQualityIndex];
 		let { timestamp_info } = videoRepresentation;
 		let startTimeCode = timestamp_info["media"][this.videoMediaIndex]["timecode"];
@@ -384,6 +401,7 @@ class Streaming {
 };
 
 module.exports = Streaming;
+
 },{"./manifest-parser":2,"./queue":3,"./util":6}],5:[function(require,module,exports){
 class Timer {
 	constructor() {

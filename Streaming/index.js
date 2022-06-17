@@ -12,10 +12,12 @@ playerElement.addEventListener("error", (err) => console.log(err));
 let timer = new Timer(playerElement.duration);
 
 playerElement.addEventListener("play", () => {
+	console.log("playplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplay")
 	timer.start();
 });
 
 playerElement.addEventListener("ended", () => {
+	console.log("endedendedendedendedendedendedendedendedendedendedendedendedendedendedendedendedendedended")
 	timer.end();
 	timer.setVideoDuration(playerElement.duration);
 	console.log("Lag Ratio: " + timer.lagRatio);

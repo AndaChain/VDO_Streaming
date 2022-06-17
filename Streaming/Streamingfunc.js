@@ -3,7 +3,6 @@ const resolve_content_type = (filename) => filename === "audio.webm" ? "audio/we
 
 function sendFile(req , res , file_path , file_name){
     let { size: fileSize } = fs.statSync(file_path);
-
 	const parts = req.headers.range.replace(/bytes=/, "").split("-");
 	const start = parseInt(parts[0], 10);
 	const end = parts[1] ? parseInt(parts[1], 10) : fileSize-1;
