@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const resolve_content_type = (filename) => filename === "audio.webm" ? "audio/webm" : "video/webm";
 
 function sendFile(req , res , file_path , file_name){
@@ -29,4 +30,9 @@ function getExtension(filename) {
 	return parts[parts.length - 1];
 }
 
+function baseStream(){
+	return path.join(__dirname,"/..","public")
+}
+
 module.exports.sendFile = sendFile;
+module.exports.baseStream = baseStream;

@@ -6,10 +6,14 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const iplocation = require("iplocation");
-const { sendFile } = require("./Streaming/Streamingfunc");
+const { sendFile, baseStream } = require("./Streaming/Streamingfunc");
 var video_list = null;
+const resolve_file_path = (video_id, filename) => path.join(__dirname, "video", video_id, filename);
 
 app.set("view engine", "ejs");
+app.use(express.static( baseStream() ));
+
+//app.use(express.static(path.join(__dirname, "public")));
 /*
 app.use((req, res, next) => {
 	console.log("*******************************************")
@@ -18,6 +22,7 @@ app.use((req, res, next) => {
 	next();
 });
 */
+/*
 if (process.env["NODE_ENV"] === "production") {
 	app.use((req, res, next) => {
 		let ip_addr = (req.headers["x-forwarded-for"] || req.connection.remoteAddress).split(",")[0];
@@ -31,11 +36,8 @@ if (process.env["NODE_ENV"] === "production") {
 			}
 		});
 	});
-}
-;
-app.use(express.static(path.join(__dirname, "public")));
-
-const resolve_file_path = (video_id, filename) => path.join(__dirname, "video", video_id, filename);
+};
+*/
 
 app.get("/", (req, res) => {
 	console.log("1")
@@ -51,14 +53,14 @@ app.get("/", (req, res) => {
 	res.render("index")
 });
 
-app.get("/watch/:video_id", (req, res) => {
+app.get("/home/:video_id", (req, res) => {
 	console.log("2")
 	fs.stat(path.join(__dirname, "video", req.params["video_id"]), (err, stats) => {
 		if (err || !stats.isDirectory()) {
 			console.log(err);
 			return res.redirect("/");
 		}
-
+		
 		res.locals.video_id = req.params["video_id"];
 		res.render("player");
 	});
@@ -77,7 +79,7 @@ app.get("/watch/:video_id/timestamps/:filename", (req, res) => {
 	console.log("*******************************************")
 });
 */
-app.get("/watch/:video_id/:filename", (req, res) => {
+app.get("/home/:video_id/:filename", (req, res) => {
 	console.log("5")
 	let file_name = req.params.filename;
 	let file_path = resolve_file_path(req.params["video_id"], file_name);

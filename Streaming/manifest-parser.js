@@ -1,7 +1,7 @@
 class ManifestParser {
-	constructor(video_id) {
+	constructor(video_id, base_video_url) {
 		this.video_id = video_id;
-		this.base_video_url = "/watch";
+		this.base_video_url = base_video_url;
 	}
 
 	adaptationSetToJSON(adaptationSet) {

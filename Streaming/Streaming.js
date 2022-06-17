@@ -3,12 +3,14 @@ const ManifestParser = require("./manifest-parser");
 const { calculateByteRangeEnd, createByteRangeString, RetryTimer } = require("./util");
 
 class Streaming {
-	constructor(video_id) {
+	constructor(video_id, base_video_url) {
 		this.mse = new (window.MediaSource || window.WebKitMediaSource());
 		this.video_id = video_id;
+		this.base_video_url = base_video_url;
 		this.initialized = false;
 		this.audioQueue = new Queue();
 		this.videoQueue = new Queue();
+		
 
 		this.videoDownFin = false;
 		this.audioDownFin = false;
@@ -63,7 +65,7 @@ class Streaming {
 		if (this.initialized) return;
 		this.initialized = true;
 
-		(new ManifestParser(this.video_id)).getJSONManifest()
+		(new ManifestParser(this.video_id, this.base_video_url)).getJSONManifest()
 		.then((adaptSetsObj) => {
 			this.videoSets = adaptSetsObj["video/webm"];
 			this.audioSets = adaptSetsObj["audio/webm"];
