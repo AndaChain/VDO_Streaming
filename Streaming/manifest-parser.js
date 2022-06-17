@@ -22,7 +22,7 @@ class ManifestParser {
 			representationObj["url"] = `${this.base_video_url}/${this.video_id}/${this.getUrl(representations[i])}`;
 
 			let timestampPromise = new Promise((res, rej) => {
-				fetch(`${this.base_video_url}/${this.video_id}/timestamps/${this.getUrl(representations[i])}.json`)
+				fetch(`${this.base_video_url}/${this.video_id}/${this.getUrl(representations[i])}.json`)
 				.then((response) => response.json())
 				.then((timestamp_info) => {
 					representationObj["timestamp_info"] = timestamp_info;
