@@ -84,7 +84,7 @@ class Segment_Creater{
 	}
 }
 module.exports = Segment_Creater;
-
+/*
 source = "D:\\Documents\\Code\\Streaming_2\\master"
 savevideo = __dirname+"\\video\\Polkka_rock\\"
 manifest =  __dirname+"\\video\\Polkka_rock\\"
@@ -95,4 +95,4 @@ segment.extract_video('640x360')
 segment.extract_video('320x180')
 segment.extract_video('160x90')
 segment.extract_audio()
-
+*/
