@@ -4,11 +4,11 @@ const jsongen = require("./jsongen.js");
 const fs = require("fs");
 
 class Segment_Creater{
-    constructor(source, savevideo, manifest, json, fileoutname){
+    constructor(source, savevideo, fileoutname){
 		this.pathToSourceFile = source+"\\"+fileoutname
 		this.pathToSaveFile = savevideo+"\\"+fileoutname
-		this.pathToJsonFile = json+"\\"+fileoutname
-		this.pathToManifestFile = manifest+"\\"
+		this.pathToJsonFile = savevideo+"\\"+fileoutname
+		this.pathToManifestFile = savevideo+"\\"
 		
 		this.counter = 0
 		this.keep_sizes = []
@@ -87,10 +87,8 @@ module.exports = Segment_Creater;
 /*
 source = "D:\\Documents\\Code\\Streaming_2\\master"
 savevideo = __dirname+"\\video\\Polkka_rock\\"
-manifest =  __dirname+"\\video\\Polkka_rock\\"
-json = __dirname+"\\video\\Polkka_rock\\"
 fileoutname = "Polkka_rock"
-var segment = new Segment_Creater(source, savevideo, manifest, json, fileoutname);
+var segment = new Segment_Creater(source, savevideo, fileoutname);
 segment.extract_video('640x360')
 segment.extract_video('320x180')
 segment.extract_video('160x90')

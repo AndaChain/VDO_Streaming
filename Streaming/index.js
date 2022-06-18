@@ -4,14 +4,22 @@ const path = require("path");
 
 const playerElement = document.getElementById("videoPlayer");
 const video_id = playerElement.getAttribute("data-player-id");
-
+/*
 var base_video_url = path.join(window.location.href,"/..")
-//const url = new URL(base_video_url).getPath();
-var obj = new URL(base_video_url)
-base_video_url = obj.pathname
-//console.log( base_video_url )
 
-const player = new Player(video_id, base_video_url);
+if(window.location.href.split("/") > 4){
+	//const url = new URL(base_video_url).getPath();
+	var obj = new URL(base_video_url)
+	base_video_url = obj.pathname
+}
+else{
+	base_video_url = ""
+}
+*/
+console.log( "////////" )
+console.log( window.location.href.split("/") )
+console.log( "////////" )
+const player = new Player(video_id);
 
 playerElement.src = player.objectUrl;
 playerElement.addEventListener("error", (err) => console.log(err));

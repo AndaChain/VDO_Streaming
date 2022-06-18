@@ -1,8 +1,14 @@
 const fs = require("fs");
 const path = require("path");
-const resolve_content_type = (filename) => filename === "audio.webm" ? "audio/webm" : "video/webm";
+const segment = require(path.join(__dirname,"/..")+"\\Segment_Creater.js")
 
-function sendFile(req , res , file_path , file_name){
+const resolve_content_type = (filename) => filename === "audio.webm" ? "audio/webm" : "video/webm";
+const resolve_file_path = (basepath, video_id, filename) => path.join(basepath, video_id, filename);
+
+function sendFile(req, res, basepath){
+	let file_name = req.params.filename;
+	let file_path = resolve_file_path(basepath, req.params["video_id"], file_name);
+	
 	if (getExtension(file_name).toLowerCase() !== "webm"){
 		res.sendFile(file_path);
 		return
@@ -25,7 +31,7 @@ function sendFile(req , res , file_path , file_name){
 	fs.createReadStream(file_path, { start, end }).pipe(res);
 }
 
-function getExtension(filename) {
+function getExtension(filename){
 	var parts = filename.split('.');
 	return parts[parts.length - 1];
 }
@@ -34,5 +40,19 @@ function baseStream(){
 	return path.join(__dirname,"/..","public")
 }
 
+function segment_creater(source, savevideo, fileoutname){
+	return new segment(source, savevideo, fileoutname)
+}
+
 module.exports.sendFile = sendFile;
 module.exports.baseStream = baseStream;
+/*
+source = "D:\\Documents\\Code\\Streaming_2\\master"
+savevideo = "D:\\Documents\\Code\\Streaming_2\\master\\VDO_Streaming_master\\video\\Polkka_rock"
+fileoutname = "Polkka_rock"
+var obj = segment_creater(source, savevideo, fileoutname);
+obj.extract_video('640x360')
+obj.extract_video('320x180')
+obj.extract_video('160x90')
+obj.extract_audio()
+*/

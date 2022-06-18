@@ -724,14 +724,22 @@ const path = require("path");
 
 const playerElement = document.getElementById("videoPlayer");
 const video_id = playerElement.getAttribute("data-player-id");
-
+/*
 var base_video_url = path.join(window.location.href,"/..")
-//const url = new URL(base_video_url).getPath();
-var obj = new URL(base_video_url)
-base_video_url = obj.pathname
-//console.log( base_video_url )
 
-const player = new Player(video_id, base_video_url);
+if(window.location.href.split("/") > 4){
+	//const url = new URL(base_video_url).getPath();
+	var obj = new URL(base_video_url)
+	base_video_url = obj.pathname
+}
+else{
+	base_video_url = ""
+}
+*/
+console.log( "////////" )
+console.log( window.location.href.split("/") )
+console.log( "////////" )
+const player = new Player(video_id);
 
 playerElement.src = player.objectUrl;
 playerElement.addEventListener("error", (err) => console.log(err));
@@ -751,10 +759,12 @@ playerElement.addEventListener("ended", () => {
 });
 
 },{"./streaming":6,"./timer":7,"path":1}],4:[function(require,module,exports){
+const path = require("path");
+
 class ManifestParser {
-	constructor(video_id, base_video_url) {
+	constructor(video_id) {
 		this.video_id = video_id;
-		this.base_video_url = base_video_url;
+		//this.base_video_url = base_video_url;
 	}
 
 	adaptationSetToJSON(adaptationSet) {
@@ -772,10 +782,13 @@ class ManifestParser {
 		for (let i = 0; i < representations.length; i++) {
 			let representationObj = {};
 			adaptSetObj.representations[i] = representationObj;
-			representationObj["url"] = `${this.base_video_url}/${this.video_id}/${this.getUrl(representations[i])}`;
+			representationObj["url"] = path.join(  this.video_id, this.getUrl(representations[i])  )
+			//representationObj["url"] = `${this.base_video_url}/${this.video_id}/${this.getUrl(representations[i])}`;
 
 			let timestampPromise = new Promise((res, rej) => {
-				fetch(`${this.base_video_url}/${this.video_id}/${this.getUrl(representations[i])}.json`)
+				
+				//fetch(`${this.base_video_url}/${this.video_id}/${this.getUrl(representations[i])}.json`)
+				fetch(   path.join(this.video_id, this.getUrl(representations[i])+".json")   )
 				.then((response) => response.json())
 				.then((timestamp_info) => {
 					representationObj["timestamp_info"] = timestamp_info;
@@ -794,18 +807,19 @@ class ManifestParser {
 		let { children } = representation;
 		for (let i = 0; children.length; i++) {
 			if (children[i].tagName == "BaseURL") {
-				return children[i].textContent.split("\\\\")[1];
+				return children[i].textContent.split("\\").pop();
 			}
 		}
 	}
 
 	getJSONManifest() {
 		return new Promise((resolve, reject) => {
-			fetch(`${this.base_video_url}/${this.video_id}/manifest.mpd`)
+			//fetch(`${this.base_video_url}/${this.video_id}/manifest.mpd`)
+			fetch(  path.join(this.video_id, "manifest.mpd")  )
 			.then((response) => response.text())
 			.then((manifest_str) => (new window.DOMParser()).parseFromString(manifest_str, "text/xml"))
 			.then((manifest) => {
-				console.log(manifest)
+				//console.log(manifest)
 				let first_period = manifest.getElementsByTagName("Period")[0];
 				let adaptationSets = first_period.children;
 
@@ -834,7 +848,7 @@ class ManifestParser {
 
 module.exports = ManifestParser;
 
-},{}],5:[function(require,module,exports){
+},{"path":1}],5:[function(require,module,exports){
 class Queue {
 	constructor() {
 		this.data = [];
@@ -873,10 +887,10 @@ const ManifestParser = require("./manifest-parser");
 const { calculateByteRangeEnd, createByteRangeString, RetryTimer } = require("./util");
 
 class Streaming {
-	constructor(video_id, base_video_url) {
+	constructor(video_id) {
 		this.mse = new (window.MediaSource || window.WebKitMediaSource());
 		this.video_id = video_id;
-		this.base_video_url = base_video_url;
+		//this.base_video_url = base_video_url;
 		this.initialized = false;
 		this.audioQueue = new Queue();
 		this.videoQueue = new Queue();
@@ -935,7 +949,7 @@ class Streaming {
 		if (this.initialized) return;
 		this.initialized = true;
 
-		(new ManifestParser(this.video_id, this.base_video_url)).getJSONManifest()
+		(new ManifestParser(this.video_id)).getJSONManifest()
 		.then((adaptSetsObj) => {
 			this.videoSets = adaptSetsObj["video/webm"];
 			this.audioSets = adaptSetsObj["audio/webm"];
