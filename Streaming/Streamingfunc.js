@@ -48,8 +48,8 @@ module.exports.sendFile = sendFile;
 module.exports.baseStream = baseStream;
 /*
 source = "D:\\Documents\\Code\\Streaming_2\\master"
-savevideo = "D:\\Documents\\Code\\Streaming_2\\master\\VDO_Streaming_master\\video\\Polkka_rock"
-fileoutname = "Polkka_rock"
+savevideo = "D:\\Documents\\Code\\Streaming_2\\master\\VDO_Streaming_master\\video\\RHCP"
+fileoutname = "RHCP"
 var obj = segment_creater(source, savevideo, fileoutname);
 obj.extract_video('640x360')
 obj.extract_video('320x180')

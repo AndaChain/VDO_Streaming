@@ -722,24 +722,11 @@ const Player = require("./streaming");
 const Timer = require("./timer");
 const path = require("path");
 
-const playerElement = document.getElementById("videoPlayer");
+const id_video = document.currentScript.getAttribute('id_video')
+var playerElement = document.getElementById(id_video);
 const video_id = playerElement.getAttribute("data-player-id");
-/*
-var base_video_url = path.join(window.location.href,"/..")
-
-if(window.location.href.split("/") > 4){
-	//const url = new URL(base_video_url).getPath();
-	var obj = new URL(base_video_url)
-	base_video_url = obj.pathname
-}
-else{
-	base_video_url = ""
-}
-*/
-console.log( "////////" )
-console.log( window.location.href.split("/") )
-console.log( "////////" )
-const player = new Player(video_id);
+			
+const player = new Player(video_id, playerElement);
 
 playerElement.src = player.objectUrl;
 playerElement.addEventListener("error", (err) => console.log(err));
@@ -747,12 +734,11 @@ playerElement.addEventListener("error", (err) => console.log(err));
 let timer = new Timer(playerElement.duration);
 
 playerElement.addEventListener("play", () => {
-	console.log("playplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplayplay")
 	timer.start();
 });
 
 playerElement.addEventListener("ended", () => {
-	console.log("endedendedendedendedendedendedendedendedendedendedendedendedendedendedendedendedendedended")
+	console.log("***end***")
 	timer.end();
 	timer.setVideoDuration(playerElement.duration);
 	console.log("Lag Ratio: " + timer.lagRatio);
@@ -887,11 +873,13 @@ const ManifestParser = require("./manifest-parser");
 const { calculateByteRangeEnd, createByteRangeString, RetryTimer } = require("./util");
 
 class Streaming {
-	constructor(video_id) {
+	constructor(video_id, playerElement) {
 		this.mse = new (window.MediaSource || window.WebKitMediaSource());
 		this.video_id = video_id;
+		this.playerElement = playerElement
 		//this.base_video_url = base_video_url;
 		this.initialized = false;
+		this.buffer_move = true;
 		this.audioQueue = new Queue();
 		this.videoQueue = new Queue();
 		
@@ -912,25 +900,24 @@ class Streaming {
 	}
 
 	get objectUrl() {
-		console.log("***************************************************** I'm HERE 1 *****************************************************")
+		//console.log("***************************************************** I'm HERE 1 *****************************************************")
 		return URL.createObjectURL(this.mse);
 	}
 
 	appendBufFromQueue(srcBuffer, queue) {
-		console.log("***************************************************** I'm HERE 2 *****************************************************")
+		//console.log("***************************************************** I'm HERE 2 *****************************************************")
 		queue.pipingToSourceBuffer = true;
-
 		return !queue.empty() && (srcBuffer.appendBuffer(queue.popFirst()) || true);
 	}
 
 	readData(reader, bufferQueue, sourceBuffer, callback = () => {}) {
-		console.log("***************************************************** I'm HERE 3 *****************************************************")
+		//console.log("***************************************************** I'm HERE 3 *****************************************************")
 		reader.read()
 		.then((buffer) => {
 			if (buffer.value) {
 				bufferQueue.push(buffer.value);
 				if(!bufferQueue.pipingToSourceBuffer) {
-					console.log("called: ", sourceBuffer, bufferQueue.pipingToSourceBuffer);
+					//console.log("called: ", sourceBuffer, bufferQueue.pipingToSourceBuffer);
 					this.appendBufFromQueue(sourceBuffer, bufferQueue);
 				}	
 			}
@@ -945,7 +932,7 @@ class Streaming {
 	}
 
 	init() {
-		console.log("***************************************************** I'm HERE 4 *****************************************************")
+		//console.log("***************************************************** I'm HERE 4 *****************************************************")
 		if (this.initialized) return;
 		this.initialized = true;
 
@@ -969,13 +956,13 @@ class Streaming {
 				this.attemptEndMse();
 			});
 
-			console.log(this.video_id+"===================");
+			//console.log(this.video_id+"===================");
 			this.fetchData();
 		});
 	}
 
 	attemptEndMse() {
-		console.log("***************************************************** I'm HERE 5 *****************************************************")
+		//console.log("***************************************************** I'm HERE 5 *****************************************************")
 		if (this.videoDownFin && this.audioDownFin && !this.videoQueue.pipingToSourceBuffer && !this.audioQueue.pipingToSourceBuffer) {
 			console.log("Ending MediaSource stream");
 			this.mse.endOfStream();
@@ -983,13 +970,13 @@ class Streaming {
 	}
 
 	fetchData() {
-		console.log("***************************************************** I'm HERE 6 *****************************************************")
+		//console.log("***************************************************** I'm HERE 6 *****************************************************")
 		this.fetchVideoAdaptive();
 		this.fetchAudio();
 	}
 
 	fetchVideoAdaptive() {
-		console.log("***************************************************** I'm HERE 7 *****************************************************")
+		//console.log("***************************************************** I'm HERE 7 *****************************************************")
 		this.fetchVideoInit()
 		.then(() => {
 			this.fetchVideoNextTimeSlice();
@@ -1001,7 +988,7 @@ class Streaming {
 	}
 
 	fetchVideoNextTimeSlice() {
-		console.log("***************************************************** I'm HERE 8 *****************************************************")
+		//console.log("***************************************************** I'm HERE 8 *****************************************************")
 		let videoRepresentation = this.videoSets["representations"][this.videoQualityIndex];
 		let { timestamp_info } = videoRepresentation;
 
@@ -1032,7 +1019,7 @@ class Streaming {
 
 	// fetches initial video (webm headers + initial 5 seconds)
 	fetchVideoInit() {
-		console.log("***************************************************** I'm HERE 9 *****************************************************")
+		//console.log("***************************************************** I'm HERE 9 *****************************************************")
 		let videoRepresentation = this.videoSets["representations"][this.videoQualityIndex];
 		let { timestamp_info } = videoRepresentation;
 
@@ -1059,7 +1046,7 @@ class Streaming {
 	}
 
 	fetchAudio() {
-		console.log("***************************************************** I'm HERE 10 *****************************************************")
+		//console.log("***************************************************** I'm HERE 10 *****************************************************")
 		fetch(this.audioSets["representations"][0]["url"], {
 			headers: {
 				range: `bytes=${this.audioQueue.numBytesWrittenInSegment}-`
@@ -1081,14 +1068,23 @@ class Streaming {
 	}
 
 	handleReadDataFinish(finishForThrottle, nextAction, retryRequestCall) {
-		console.log("***************************************************** I'm HERE 11 *****************************************************")
+		//console.log("***************************************************** I'm HERE 11 *****************************************************")
 		return (err) => {
 			if (err) {
 				console.log("Retrying in video init", err);
 				return retryRequestCall();
 			}
-
-			this.videoMediaIndex++;
+			
+			var Time = this._inTime()
+			
+			this.videoMediaIndex++
+			
+			this.playerElement.addEventListener("waiting", () => {
+					this.videoMediaIndex = Time-1
+					this.playerElement.pause()
+					console.log("Jump!!")
+			})
+			
 			this.videoQueue.resetByteCounter();
 			finishForThrottle();
 			nextAction();
@@ -1096,7 +1092,7 @@ class Streaming {
 	}
 
 	retryRequest(requestCall) {
-		console.log("***************************************************** I'm HERE 12 *****************************************************")
+		//console.log("***************************************************** I'm HERE 12 *****************************************************")
 		console.log(`Retrying request in ${this.retryTimer.time}`);
 		setTimeout(requestCall, this.retryTimer.time);
 		this.retryTimer.increase();
@@ -1104,7 +1100,7 @@ class Streaming {
 
 	// Improves quality (if possible) if time to fetch information < 50% of buffer duration decreases (if possible) if greater than 75%
 	_throttleQualityOnFeedback(fetchCall) {
-		console.log("***************************************************** I'm HERE 13 *****************************************************")
+		//console.log("***************************************************** I'm HERE 13 *****************************************************")
 		let bufferDuration = this._calcDuration();
 		let startTime = Date.now();
 		fetchCall(() => {
@@ -1127,18 +1123,37 @@ class Streaming {
 		});
 	}
 
-	_calcDuration() {
-		console.log("***************************************************** I'm HERE 14 *****************************************************")
+	_calcDuration(){
+		//console.log("***************************************************** I'm HERE 14 *****************************************************")
 		let videoRepresentation = this.videoSets["representations"][this.videoQualityIndex];
 		let { timestamp_info } = videoRepresentation;
+		
 		let startTimeCode = timestamp_info["media"][this.videoMediaIndex]["timecode"];
-
+		
 		if (this.videoMediaIndex === timestamp_info["media"].length - 1) {
 			return timestamp_info["duration"] - (1000 * startTimeCode);
 		} else {
 			let nextTimeCode = timestamp_info["media"][this.videoMediaIndex + 1]["timecode"];
 			return 1000 * (nextTimeCode - startTimeCode);
 		}
+	}
+	
+	_inTime(){
+		var current_time = this.playerElement.currentTime
+		
+		let videoRepresentation = this.videoSets["representations"][this.videoQualityIndex];
+		let { timestamp_info } = videoRepresentation;
+		
+		let n = timestamp_info["media"].length
+		
+		for(let i=0; n-1>i; i++){
+			let lower = timestamp_info["media"][i]["timecode"];
+			let upper = timestamp_info["media"][i+1]["timecode"];
+			if(current_time >= lower && current_time < upper){
+				return i
+			}
+		}
+		
 	}
 };
 
