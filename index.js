@@ -5,11 +5,11 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 5000;
-const { sendFile, baseStream } = require("./Streaming/Streamingfunc"); //**
+const { sendFile, baseStream } = require("./Streaming/Streamingfunc"); // เรียก Streaming
 var video_list = null;
 
 app.set("view engine", "ejs");
-app.use(express.static( baseStream() )); //**
+app.use(express.static( baseStream() )); // ให้รู้ว่าไฟล module อยู่ไหน
 
 app.get("/", (req, res) => {
 	console.log("1")
@@ -25,22 +25,16 @@ app.get("/", (req, res) => {
 	res.render("index")
 });
 
-app.get("/home/:video_id", (req, res) => { 
+app.get("/home/:video_name", (req, res) => { 
 	console.log("2")
-	fs.stat(path.join(__dirname, "video", req.params["video_id"]), (err, stats) => {
-		if (err || !stats.isDirectory()) {
-			console.log(err);
-			return res.redirect("/");
-		}
-		
-		res.locals.video_id = req.params["video_id"];
-		res.render("player");
-	});
-}); //**
+	res.locals.video_id = req.params["video_name"];
+	res.render("player");
+	
+});
 
-app.get("/home/:video_id/:filename", (req, res) => {
+app.get("/home/:video_name/:filename", (req, res) => {
 	console.log("5")
-	sendFile(req, res, __dirname+"/video"); //**
+	sendFile(req, res, __dirname+"/video"); // path ที่เก็บ folder video ทั้งหลาย (ตาม structure การแตกไฟล์)
 });
 
 app.listen(PORT, () => console.log(`Server listening in on port ${PORT}`));

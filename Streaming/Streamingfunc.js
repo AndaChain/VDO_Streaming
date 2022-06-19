@@ -1,13 +1,13 @@
 const fs = require("fs");
 const path = require("path");
-const segment = require(path.join(__dirname,"/..")+"\\Segment_Creater.js")
+const segment = require("./Segment_Creater.js")
 
 const resolve_content_type = (filename) => filename === "audio.webm" ? "audio/webm" : "video/webm";
-const resolve_file_path = (basepath, video_id, filename) => path.join(basepath, video_id, filename);
+const resolve_file_path = (basepath, video_name, filename) => path.join(basepath, video_name, filename);
 
 function sendFile(req, res, basepath){
 	let file_name = req.params.filename;
-	let file_path = resolve_file_path(basepath, req.params["video_id"], file_name);
+	let file_path = resolve_file_path(basepath, req.params["video_name"], file_name);
 	
 	if (getExtension(file_name).toLowerCase() !== "webm"){
 		res.sendFile(file_path);
@@ -48,8 +48,8 @@ module.exports.sendFile = sendFile;
 module.exports.baseStream = baseStream;
 /*
 source = "D:\\Documents\\Code\\Streaming_2\\master"
-savevideo = "D:\\Documents\\Code\\Streaming_2\\master\\VDO_Streaming_master\\video\\RHCP"
-fileoutname = "RHCP"
+savevideo = "D:\\Documents\\Code\\Streaming_2\\master\\VDO_Streaming_master\\video\\drive"
+fileoutname = "drive"
 var obj = segment_creater(source, savevideo, fileoutname);
 obj.extract_video('640x360')
 obj.extract_video('320x180')
