@@ -1013,7 +1013,7 @@ class Streaming {
 			});
 		} else {
 			this.videoDownFin = true;
-			this.attemptEndMse();
+			this.videoMediaIndex = 0
 		}
 	}
 
